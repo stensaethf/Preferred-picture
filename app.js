@@ -4,9 +4,34 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var multipart = require('connect-multiparty');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var config = require('./config');
+var mongoose = require('mongoose');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+// load up the db
+var connect = function () {
+  var options = { server: { socketOptions: { keepAlive: 1 } } };
+  mongoose.connect(config.db, options);
+};
+connect();
+
+// Error handler
+mongoose.connection.on('error', function (err) {
+  console.log(err);
+});
+
+// Reconnect when closed
+mongoose.connection.on('disconnected', function () {
+  connect();
+});
+
+// Models
+require('./models/vote');
+require('./models/picture');
+var Vote = mongoose.model('Vote');
+var Picture = mongoose.model('Picture');
 
 var app = express();
 
@@ -17,44 +42,44 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: '25mb'}));
+app.use(bodyParser.urlencoded({
+  limit: '25mb',
+  extended: true
+}));
+var multipartMiddleware = multipart();
+app.use(multipartMiddleware);
 app.use(cookieParser());
+app.use(session({
+  secret: config.secret,
+  maxAge: 2592000000,
+  store: new MongoStore(
+    { mongooseConnection: mongoose.connection },
+    function(err){
+      console.log(err || 'connect-mongodb setup ok');
+    }),
+  saveUninitialized: true,
+  resave: true
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+var index = require('./routes/index');
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use('/', index);
+
+// Handle 404
+app.use(function(req, res) {
+  var renderObj = {title: '404: File Not Found'};
+  res.status(404);
+  res.render('404.jade');
 });
 
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+// Handle 500
+app.use(function(error, req, res, next) {
+  var renderObj = {title:'500: Internal Server Error', error: error};
+  res.status(500);
+  console.log(error);
+  res.render('500.jade');
 });
-
 
 module.exports = app;
