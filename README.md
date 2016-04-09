@@ -1,5 +1,5 @@
 # Preferred-picture
-Node application that ranks pictures based on votes.
+Node application for ranking pictures based on votes.
 
 To-do:
 - make model for picture

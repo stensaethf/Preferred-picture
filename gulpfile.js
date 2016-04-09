@@ -93,7 +93,6 @@ gulp.task('jsvendor', function() {
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./public/js'));
 });
-console.log('GOTHERER');
 
 gulp.task('jade', function() {
   var YOUR_LOCALS = {};
@@ -103,7 +102,6 @@ gulp.task('jade', function() {
     .pipe(concat("templates.js", {newLine: ';'}))
     .pipe(gulp.dest('./public/js'));
 });
-console.log('GOTHERER');
 
 gulp.task('lint', function() {
     var lint = gulp.src(['./assets/js/*.js', './models/*.js', './routes/*.js', './*.js'])
