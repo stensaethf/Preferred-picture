@@ -3,8 +3,8 @@ var router = express.Router();
 
 // Models
 var mongoose = require('mongoose');
-var Post = mongoose.model('Post');
-var User = mongoose.model('User');
+var Picture = mongoose.model('Picture');
+var Vote = mongoose.model('Vote');
 
 module.exports = function() {
   // index.
