@@ -1,0 +1,31 @@
+// SIZES
+// ------------------------------
+$master-width: 74em;
+$radius: 3px;
+$standard-margin: 1rem;
+
+// COLORS
+// ------------------------------
+
+$primary-color: black; //#1F2124;
+$secondary-color: gray; //#383A3F;
+$tertiary-color: black; //#F88650;
+$quaternary-color: orange; //#F8B447;
+$warning-color: #AA312E;
+$background-color: #D5D5D5;
+
+// MEDIA QUERIES
+// ------------------------------
+
+@mixin xl {
+  @media (min-width: 768px) { @content; }
+}
+
+// FONTS
+// ------------------------------
+
+@mixin standard-font {
+  font-family: "myriad-pro", Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
