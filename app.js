@@ -65,7 +65,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var index = require('./routes/index');
 
-app.use('/', index);
+app.use('/', index)();
 
 // Handle 404
 app.use(function(req, res) {
