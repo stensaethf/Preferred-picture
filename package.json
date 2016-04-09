@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "seed": ". ./seeds/refresh_db.sh",
-    "dev": "FROENNDEV=1 gulp & nodemon -e js ./bin/www",
+    "dev": "PREFERREDPICTUREDEV=1 gulp & nodemon -e js ./bin/www",
     "startmongo": "mongod -f ./mongoconf.yml",
     "mongo": "mongo -u preferredpictureprod -p 'preferredpicture1!' localhost:27017/preferredpicture",
     "mongoadmin": "mongo -u preferredpictureadmin -p 'preferredpicture1!' localhost:27017/admin",

@@ -12,7 +12,7 @@ var jade = require('gulp-jade');
 var through = require('through2');
 var path = require('path');
 
-var PRODUCTION = process.env.FROENNDEV !== '1';
+var PRODUCTION = process.env.PREFERREDPICTUREDEV !== '1';
 
 // edits the function name of the jade function
 // send to the browser
@@ -93,6 +93,7 @@ gulp.task('jsvendor', function() {
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./public/js'));
 });
+console.log('GOTHERER');
 
 gulp.task('jade', function() {
   var YOUR_LOCALS = {};
@@ -102,6 +103,7 @@ gulp.task('jade', function() {
     .pipe(concat("templates.js", {newLine: ';'}))
     .pipe(gulp.dest('./public/js'));
 });
+console.log('GOTHERER');
 
 gulp.task('lint', function() {
     var lint = gulp.src(['./assets/js/*.js', './models/*.js', './routes/*.js', './*.js'])
