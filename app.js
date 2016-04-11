@@ -9,6 +9,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var config = require('./config');
 var mongoose = require('mongoose');
+var passport = require('passport');
 
 // load up the db
 var connect = function () {
@@ -28,10 +29,12 @@ mongoose.connection.on('disconnected', function () {
 });
 
 // Models
-require('./models/vote');
 require('./models/picture');
-var Vote = mongoose.model('Vote');
+require('./models/user');
+require('./models/vote');
+var User = mongoose.model('User');
 var Picture = mongoose.model('Picture');
+var Vote = mongoose.model('Vote');
 
 var app = express();
 
@@ -61,25 +64,31 @@ app.use(session({
   saveUninitialized: true,
   resave: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var index = require('./routes/index');
+passport = require('./routes/passport')(passport);
 
-app.use('/', index)();
+var index = require('./routes/index')();
+
+app.use('/', index);
 
 // Handle 404
 app.use(function(req, res) {
   var renderObj = {title: '404: File Not Found'};
+  if (req.user) {renderObj.user = req.user;}
   res.status(404);
-  res.render('404.jade');
+  res.render('404.jade', renderObj);
 });
 
 // Handle 500
 app.use(function(error, req, res, next) {
   var renderObj = {title:'500: Internal Server Error', error: error};
+  if (req.user) {renderObj.user = req.user;}
   res.status(500);
   console.log(error);
-  res.render('500.jade');
+  res.render('500.jade', renderObj);
 });
 
 module.exports = app;
