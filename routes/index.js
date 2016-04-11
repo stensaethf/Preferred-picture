@@ -5,16 +5,12 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Picture = mongoose.model('Picture');
 var Vote = mongoose.model('Vote');
+var User = mongoose.model('User');
 
 module.exports = function() {
   // index.
   router.get('/', function(req, res) {
-    res.render('index', {}, function(err, html){
-	if (err) {
-		console.log(err);
-	}
-	res.send(html);
-	});
+    res.render('index');
   });
 
   return router;

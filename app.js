@@ -70,7 +70,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 passport = require('./routes/passport')(passport);
 
-var index = require('./routes/index')();
+var index = require('./routes/index')(passport);
 
 app.use('/', index);
 
