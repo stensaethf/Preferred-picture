@@ -8,4 +8,4 @@ To-do:
 - made index route
 - come up with algorithm for selecting pictures
 
-[In progress...]
+[Terminated for now]
